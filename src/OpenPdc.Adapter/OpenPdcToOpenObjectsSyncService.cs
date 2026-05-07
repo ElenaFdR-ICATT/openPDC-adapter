@@ -21,13 +21,14 @@ public sealed class OpenPdcToOpenObjectsSyncService(
         }
         logger.LogInformation("Collected {Count} PDC item(s).", requests.Count);
 
-        var deleteCount = 0;
+        var toDelete = new List<Guid>();
         await foreach (var existing in objectsClient.GetAllKennisartikelObjectsAsync(options.ObjectTypeUrl, cancellationToken))
-        {
-            await objectsClient.DeleteObjectAsync(existing.Uuid, cancellationToken);
-            deleteCount++;
-        }
-        logger.LogInformation("Deleted {Count} existing object(s).", deleteCount);
+            toDelete.Add(existing.Uuid);
+
+        foreach (var uuid in toDelete)
+            await objectsClient.DeleteObjectAsync(uuid, cancellationToken);
+
+        logger.LogInformation("Deleted {Count} existing object(s).", toDelete.Count);
 
         var postCount = 0;
         foreach (var request in requests)
