@@ -1,6 +1,7 @@
 using DotNetEnv;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using OpenObjects.Client;
 using OpenPdc.Adapter;
 using OpenPdc.Client;
@@ -18,6 +19,8 @@ static string Require(IConfiguration cfg, string key) =>
         : throw new InvalidOperationException($"'{key}' is required. Set it in .env or as an environment variable.");
 
 var services = new ServiceCollection();
+
+services.AddLogging(b => b.AddConsole().AddConfiguration(config.GetSection("Logging")));
 
 services.AddOpenPdcClient(o =>
 {
@@ -42,7 +45,8 @@ services.AddMigrationService(o =>
 
 await using var provider = services.BuildServiceProvider();
 
+var logger = provider.GetRequiredService<ILogger<IMigrationService>>();
 var migration = provider.GetRequiredService<IMigrationService>();
 
-Console.WriteLine("Starting migration...");
+logger.LogInformation("Starting synchronization of openPDC items to OpenObjects...");
 await migration.RunAsync();

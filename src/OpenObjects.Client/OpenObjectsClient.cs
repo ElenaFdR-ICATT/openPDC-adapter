@@ -1,5 +1,7 @@
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using OpenObjects.Client.Models;
 
 namespace OpenObjects.Client;
@@ -14,11 +16,13 @@ public sealed class OpenObjectsClient : IOpenObjectsClient
     };
 
     private readonly HttpClient _httpClient;
+    private readonly ILogger<OpenObjectsClient> _logger;
 
-    public OpenObjectsClient(HttpClient httpClient)
+    public OpenObjectsClient(HttpClient httpClient, ILogger<OpenObjectsClient> logger)
     {
         ArgumentNullException.ThrowIfNull(httpClient);
         _httpClient = httpClient;
+        _logger = logger;
     }
 
     public async Task<ObjectResponse> PostObjectAsync(
@@ -49,5 +53,59 @@ public sealed class OpenObjectsClient : IOpenObjectsClient
             .ConfigureAwait(false);
 
         return result ?? throw new InvalidOperationException("OpenObjects API returned an empty response.");
+    }
+
+    public async IAsyncEnumerable<ObjectResponse> GetAllKennisartikelObjectsAsync(
+        string objectTypeUrl,
+        [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        Uri? requestUri = new($"{_httpClient.BaseAddress}api/v2/objects?type={objectTypeUrl}");
+
+        while (requestUri != null)
+        {
+            if (_logger.IsEnabled(LogLevel.Debug))
+                _logger.LogDebug("GET {RequestUri}", requestUri.AbsoluteUri);
+
+            var httpResponse = await _httpClient
+                .GetAsync(requestUri, cancellationToken)
+                .ConfigureAwait(false);
+
+            if (httpResponse.StatusCode == System.Net.HttpStatusCode.NotFound)
+                yield break;
+
+            if (!httpResponse.IsSuccessStatusCode)
+            {
+                var errorBody = await httpResponse.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                throw new HttpRequestException(
+                    $"GET {requestUri} failed with {(int)httpResponse.StatusCode} ({httpResponse.ReasonPhrase}).\nResponse body:\n{errorBody}");
+            }
+
+            var page = await httpResponse.Content
+                .ReadFromJsonAsync<ObjectsPage>(JsonOptions, cancellationToken)
+                .ConfigureAwait(false);
+
+            if (page == null) yield break;
+
+            foreach (var obj in page.Results)
+                yield return obj;
+
+            requestUri = page.Next is { Length: > 0 } next
+                ? new Uri(next)
+                : null;
+        }
+    }
+
+    public async Task DeleteObjectAsync(Guid uuid, CancellationToken cancellationToken = default)
+    {
+        var response = await _httpClient
+            .DeleteAsync($"api/v2/objects/{uuid}", cancellationToken)
+            .ConfigureAwait(false);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            throw new HttpRequestException(
+                $"DELETE api/v2/objects/{uuid} failed with {(int)response.StatusCode} ({response.ReasonPhrase}).\nResponse body:\n{errorBody}");
+        }
     }
 }

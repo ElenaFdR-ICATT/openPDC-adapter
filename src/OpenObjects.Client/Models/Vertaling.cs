@@ -5,7 +5,7 @@ namespace OpenObjects.Client.Models;
 public sealed class Vertaling
 {
     [JsonPropertyName("taal")]
-    public string? Taal { get; init; }
+    public Taal Taal { get; init; }
 
     [JsonPropertyName("titel")]
     public string? Titel { get; init; }

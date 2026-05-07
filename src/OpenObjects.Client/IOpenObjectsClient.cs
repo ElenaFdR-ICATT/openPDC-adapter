@@ -16,4 +16,16 @@ public interface IOpenObjectsClient
     Task<ObjectResponse> PostObjectAsync(
         CreateObjectRequest request,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Streams all objects of the given type from the OpenObjects API.
+    /// </summary>
+    IAsyncEnumerable<ObjectResponse> GetAllKennisartikelObjectsAsync(
+        string objectTypeUrl,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deletes the object with the given UUID.
+    /// </summary>
+    Task DeleteObjectAsync(Guid uuid, CancellationToken cancellationToken = default);
 }

@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
         configure(options);
 
         services.AddSingleton(options);
-        services.AddTransient<IMigrationService, MigrationService>();
+        services.AddTransient<IMigrationService, OpenPdcToOpenObjectsSyncService>();
 
         return services;
     }
