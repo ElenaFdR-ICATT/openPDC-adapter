@@ -4,18 +4,18 @@ namespace OpenPdc.Adapter;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddMigrationService(
+    public static IServiceCollection AddOpenPdcToOpenObjectsSyncService(
         this IServiceCollection services,
-        Action<MigrationOptions> configure)
+        Action<OpenPdcToOpenObjectsSyncOptions> configure)
     {
         ArgumentNullException.ThrowIfNull(services);
         ArgumentNullException.ThrowIfNull(configure);
 
-        var options = new MigrationOptions();
+        var options = new OpenPdcToOpenObjectsSyncOptions();
         configure(options);
 
         services.AddSingleton(options);
-        services.AddTransient<IMigrationService, OpenPdcToOpenObjectsSyncService>();
+        services.AddTransient<IOpenPdcToOpenObjectsSyncService, OpenPdcToOpenObjectsSyncService>();
 
         return services;
     }

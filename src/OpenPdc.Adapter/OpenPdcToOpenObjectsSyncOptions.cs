@@ -1,8 +1,10 @@
 namespace OpenPdc.Adapter;
 
-public sealed class MigrationOptions
+public sealed class OpenPdcToOpenObjectsSyncOptions
 {
     public string ObjectTypeUrl { get; set; } = string.Empty;
+
+    public int ObjectTypeVersion { get; set; } = 1;
 
     public string PdcItemBaseUrl { get; set; } = string.Empty;
 
@@ -11,6 +13,4 @@ public sealed class MigrationOptions
     public string OwmsIdentifier { get; set; } = string.Empty;
 
     public DateTimeOffset OwmsEndDate { get; set; }
-
-    public string Doelgroep { get; set; } = string.Empty;
 }

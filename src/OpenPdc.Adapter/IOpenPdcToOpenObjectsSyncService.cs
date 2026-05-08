@@ -1,6 +1,6 @@
 namespace OpenPdc.Adapter;
 
-public interface IMigrationService
+public interface IOpenPdcToOpenObjectsSyncService
 {
     /// <summary>
     /// Streams all items from OpenPDC and posts each one to OpenObjects.

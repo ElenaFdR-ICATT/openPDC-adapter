@@ -26,14 +26,25 @@ All values can also be set as real environment variables or in `appsettings.json
 
 | Key | Description | Required |
 |---|---|---|
-| `OpenObjects__BaseUrl` | Base URL of the Open Objects API | No (defaults to `http://localhost:8000`) |
+| `OpenPdc__BaseUrl` | Base URL of the openPDC WordPress REST API | **Yes** |
+| `OpenPdc__ItemBaseUrl` | Base URL used to build per-item URLs in the mapped object, without trailing slash | **Yes** |
 | `OpenObjects__Token` | API token for `Authorization: Token <value>` | **Yes** |
-| `Migration__ObjectTypeUrl` | Full URL of the registered object type in Open Objects | **Yes** |
-| `Migration__PdcItemBaseUrl` | Base URL for building per-item URLs, without trailing slash | **Yes** |
-| `Migration__OwmsUrl` | URL of the responsible organisation | **Yes** |
-| `Migration__OwmsIdentifier` | OWMS identifier URI of the organisation | **Yes** |
-| `Migration__OwmsEndDate` | OWMS end date (ISO 8601) | No (defaults to `2099-12-31`) |
-| `Migration__Doelgroep` | Target audience: `eu-burger` or `eu-bedrijf` | No (defaults to `eu-bedrijf`) |
+| `OpenObjects__ObjectTypeUrl` | URL of the registered object type — e.g. `http://host/api/v2/objecttypes/<uuid>` | **Yes** |
+| `OpenObjects__ObjectTypeVersion` | Version number of the object type — e.g. `1` | **Yes** |
+| `OpenObjects__OwmsUrl` | URL of the responsible organisation | **Yes** |
+| `OpenObjects__OwmsIdentifier` | OWMS identifier URI of the organisation | **Yes** |
+| `OpenObjects__OwmsEndDate` | OWMS end date (ISO 8601) | No (defaults to `2099-12-31`) |
+
+### Constant field values
+
+The following fields in the mapped OopenObjects Kennisartikelen type are hardcoded. The issue is addressed: https://github.com/ICATT-Menselijk-Digitaal/openPDC-adapter/issues/12
+
+| Field | Value | Notes |
+|---|---|---|
+| `uuid` | `00000000-0000-0000-0000-000000000000` | Assigned by the API on creation; a zero UUID is sent as placeholder |
+| `upnUri` | `"unknown"` | Not available in the openPDC source data |
+| `productAanwezig` | `true` | Defaults to true |
+| `doelgroep` | `"eu-burger"` | Fixed target audience |
 
 ## Running
 

@@ -33,20 +33,20 @@ services.AddOpenObjectsClient(o =>
     o.Token   = Require(config, "OpenObjects:Token");
 });
 
-services.AddMigrationService(o =>
+services.AddOpenPdcToOpenObjectsSyncService(o =>
 {
-    o.ObjectTypeUrl  = Require(config, "Migration:ObjectTypeUrl");
-    o.PdcItemBaseUrl = Require(config, "Migration:PdcItemBaseUrl");
-    o.OwmsUrl        = Require(config, "Migration:OwmsUrl");
-    o.OwmsIdentifier = Require(config, "Migration:OwmsIdentifier");
-    o.OwmsEndDate    = DateTimeOffset.Parse(config["Migration:OwmsEndDate"] ?? "2099-12-31T23:59:59Z");
-    o.Doelgroep      = Require(config, "Migration:Doelgroep");
+    o.ObjectTypeUrl     = Require(config, "OpenObjects:ObjectTypeUrl");
+    o.ObjectTypeVersion = int.Parse(config["OpenObjects:ObjectTypeVersion"] ?? "1");
+    o.PdcItemBaseUrl    = Require(config, "OpenPdc:ItemBaseUrl");
+    o.OwmsUrl           = Require(config, "OpenObjects:OwmsUrl");
+    o.OwmsIdentifier    = Require(config, "OpenObjects:OwmsIdentifier");
+    o.OwmsEndDate       = DateTimeOffset.Parse(config["OpenObjects:OwmsEndDate"] ?? "2099-12-31T23:59:59Z");
 });
 
 await using var provider = services.BuildServiceProvider();
 
-var logger = provider.GetRequiredService<ILogger<IMigrationService>>();
-var migration = provider.GetRequiredService<IMigrationService>();
+var logger = provider.GetRequiredService<ILogger<IOpenPdcToOpenObjectsSyncService>>();
+var syncService = provider.GetRequiredService<IOpenPdcToOpenObjectsSyncService>();
 
 logger.LogInformation("Starting synchronization of openPDC items to OpenObjects...");
-await migration.RunAsync();
+await syncService.RunAsync();

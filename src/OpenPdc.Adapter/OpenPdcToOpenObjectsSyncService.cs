@@ -9,8 +9,8 @@ namespace OpenPdc.Adapter;
 public sealed class OpenPdcToOpenObjectsSyncService(
     IOpenPdcClient pdcClient,
     IOpenObjectsClient objectsClient,
-    MigrationOptions options,
-    ILogger<OpenPdcToOpenObjectsSyncService> logger) : IMigrationService
+    OpenPdcToOpenObjectsSyncOptions options,
+    ILogger<OpenPdcToOpenObjectsSyncService> logger) : IOpenPdcToOpenObjectsSyncService
 {
     public async Task RunAsync(CancellationToken cancellationToken = default)
     {
@@ -44,10 +44,10 @@ public sealed class OpenPdcToOpenObjectsSyncService(
     private CreateObjectRequest MapToRequest(PdcItem item) =>
         new()
         {
-            Type = options.ObjectTypeUrl,
+            Type = $"{options.ObjectTypeUrl}",
             Record = new ObjectRecord
             {
-                TypeVersion = 1,
+                TypeVersion = options.ObjectTypeVersion,
                 StartAt     = DateOnly.FromDateTime(DateTime.UtcNow),
                 Data = new ObjectData
                 {
@@ -56,7 +56,7 @@ public sealed class OpenPdcToOpenObjectsSyncService(
                     UpnUri          = "unknown",
                     PublicatieDatum = item.DateModified is { } dto ? DateOnly.FromDateTime(dto.UtcDateTime) : null,
                     ProductAanwezig = true,
-                    Doelgroep       = options.Doelgroep,
+                    Doelgroep       = "eu-burger",
                     VerantwoordelijkeOrganisatie = new VerantwoordelijkeOrganisatie
                     {
                         Url            = options.OwmsUrl,
