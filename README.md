@@ -50,5 +50,5 @@ The following fields in the mapped OopenObjects Kennisartikelen type are hardcod
 ## Running
 
 ```bash
-dotnet run --project src/OpenPdc.Sample/OpenPdc.Sample.csproj
+dotnet run --project src/OpenPdc.Worker/OpenPdc.Worker.csproj
 ```
