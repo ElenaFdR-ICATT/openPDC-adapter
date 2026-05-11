@@ -121,7 +121,7 @@ public sealed class OpenObjectsClient : IOpenObjectsClient
         return page?.Results ?? [];
     }
 
-    public async Task<ObjectResponse> PutObjectAsync(Guid uuid, CreateObjectRequest request, CancellationToken cancellationToken = default)
+    public async Task PutObjectAsync(Guid uuid, CreateObjectRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
@@ -141,12 +141,6 @@ public sealed class OpenObjectsClient : IOpenObjectsClient
             throw new HttpRequestException(
                 $"PUT api/v2/objects/{uuid} failed with {(int)response.StatusCode} ({response.ReasonPhrase}).\nResponse body:\n{errorBody}");
         }
-
-        var result = await response.Content
-            .ReadFromJsonAsync<ObjectResponse>(JsonOptions, cancellationToken)
-            .ConfigureAwait(false);
-
-        return result ?? throw new InvalidOperationException("OpenObjects API returned an empty response.");
     }
 
     public async Task DeleteObjectAsync(Guid uuid, CancellationToken cancellationToken = default)

@@ -33,7 +33,7 @@ public interface IOpenObjectsClient
     /// <summary>
     /// Replaces the object with the given UUID.
     /// </summary>
-    Task<ObjectResponse> PutObjectAsync(Guid uuid, CreateObjectRequest request, CancellationToken cancellationToken = default);
+    Task PutObjectAsync(Guid uuid, CreateObjectRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes the object with the given UUID.
