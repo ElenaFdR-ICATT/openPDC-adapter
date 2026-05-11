@@ -10,15 +10,16 @@ The openPDC-adapter is developed and tested with a openPDC WorkdPress plugin
 ## How it works
 
 1. **Read** — streams all PDC items from the openPDC WordPress REST API (handles pagination automatically)
-2. **Map** — converts each item to an SDG Kennisartikel object matching the [kennisartikel schema](src/docs/kennisartikel-schema.json)
-3. **Write** — POSTs each mapped object to the Open Objects API
+2. **Map** — converts each item to an SDG Kennisartikel object matching the [kennisartikel schema](https://github.com/open-objecten/objecttypes/blob/main/community-concepts/PDC%20-%20kennisartikel/kennisartikel-schema.json)
+3. **Delete** - DELETEs the existing Kennisartikel objects in OpenObjects 
+4. **Write** — POSTs each mapped object to the Open Objects API
 
 ## Prerequisites
 
 | Requirement | Version |
 |---|---|
 | openPDC WordPress instance | accessible over HTTP |
-| [Open Objects API](https://github.com/maykinmedia/objects-api) | running and configured with an object type (see src/docs/kennisartikel-schema.json) |
+| [Open Objects API](https://github.com/maykinmedia/objects-api) | running and configured with the 'Kennisartikel' object type |
 
 ### Configuration reference
 
