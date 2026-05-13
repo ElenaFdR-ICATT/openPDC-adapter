@@ -21,6 +21,12 @@ The openPDC-adapter is developed and tested with a openPDC WorkdPress plugin
 | openPDC WordPress instance | accessible over HTTP |
 | [Open Objects API](https://github.com/maykinmedia/objects-api) | running and configured with the 'Kennisartikel' object type |
 
+#### Running Open Objects with Docker
+
+To run Open Objects via `docker-compose`, create a `docker/postgres.entrypoint-initdb.d/` directory **in the same directory as your `docker-compose.yml`** and populate it with the DB initialisation scripts from:
+
+> https://github.com/maykinmedia/open-object/tree/master/docker/postgres.entrypoint-initdb.d
+
 ### Configuration reference
 
 All values can also be set as real environment variables or in `appsettings.json`. Environment variables take precedence.

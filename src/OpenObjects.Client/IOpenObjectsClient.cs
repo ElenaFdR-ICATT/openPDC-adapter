@@ -25,12 +25,6 @@ public interface IOpenObjectsClient
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Returns all objects whose <c>data.url</c> field matches <paramref name="dataUrl"/> exactly.
-    /// Returns an empty list when no match is found. More than one result indicates duplicates.
-    /// </summary>
-    Task<IReadOnlyList<ObjectResponse>> FindObjectsByDataUrlAsync(string dataUrl, CancellationToken cancellationToken = default);
-
-    /// <summary>
     /// Replaces the object with the given UUID.
     /// </summary>
     Task PutObjectAsync(Guid uuid, CreateObjectRequest request, CancellationToken cancellationToken = default);

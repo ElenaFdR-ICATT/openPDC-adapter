@@ -95,32 +95,6 @@ public sealed class OpenObjectsClient : IOpenObjectsClient
         }
     }
 
-    public async Task<IReadOnlyList<ObjectResponse>> FindObjectsByDataUrlAsync(string dataUrl, CancellationToken cancellationToken = default)
-    {
-        var encodedAttr = Uri.EscapeDataString($"url__exact__{dataUrl}");
-        var requestUri = $"api/v2/objects?data_attr={encodedAttr}";
-
-        var response = await _httpClient
-            .GetAsync(requestUri, cancellationToken)
-            .ConfigureAwait(false);
-
-        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-            return [];
-
-        if (!response.IsSuccessStatusCode)
-        {
-            var errorBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            throw new HttpRequestException(
-                $"GET {requestUri} failed with {(int)response.StatusCode} ({response.ReasonPhrase}).\nResponse body:\n{errorBody}");
-        }
-
-        var page = await response.Content
-            .ReadFromJsonAsync<ObjectsPage>(JsonOptions, cancellationToken)
-            .ConfigureAwait(false);
-
-        return page?.Results ?? [];
-    }
-
     public async Task PutObjectAsync(Guid uuid, CreateObjectRequest request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
