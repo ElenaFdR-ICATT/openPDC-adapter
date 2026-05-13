@@ -55,7 +55,7 @@ public sealed class OpenObjectsClient : IOpenObjectsClient
         return result ?? throw new InvalidOperationException("OpenObjects API returned an empty response.");
     }
 
-    public async IAsyncEnumerable<ObjectResponse> GetAllKennisartikelObjectsAsync(
+    public async IAsyncEnumerable<ObjectResponse> GetAllObjectsByObjectTypeUrlAsync(
         string objectTypeUrl,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {

@@ -25,7 +25,7 @@ public sealed class OpenPdcToOpenObjectsSyncService(
         try
         {
             var grouped = new Dictionary<long, List<ObjectResponse>>();
-            await foreach (var obj in objectsClient.GetAllKennisartikelObjectsAsync(options.ObjectTypeUrl, cancellationToken))
+            await foreach (var obj in objectsClient.GetAllObjectsByObjectTypeUrlAsync(options.ObjectTypeUrl, cancellationToken))
             {
                 var dataUrl = obj.Record?.Data?.Url;
                 if (dataUrl is null) 

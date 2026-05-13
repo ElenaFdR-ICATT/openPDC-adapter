@@ -20,7 +20,7 @@ public interface IOpenObjectsClient
     /// <summary>
     /// Streams all objects of the given type from the OpenObjects API.
     /// </summary>
-    IAsyncEnumerable<ObjectResponse> GetAllKennisartikelObjectsAsync(
+    IAsyncEnumerable<ObjectResponse> GetAllObjectsByObjectTypeUrlAsync(
         string objectTypeUrl,
         CancellationToken cancellationToken = default);
 
