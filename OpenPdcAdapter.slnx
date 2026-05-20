@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/OpenPdc.Client/OpenPdc.Client.csproj" />
+    <Project Path="src/OpenObjects.Client/OpenObjects.Client.csproj" />
+    <Project Path="src/OpenPdc.Adapter/OpenPdc.Adapter.csproj" />
+    <Project Path="src/OpenPdc.Worker/OpenPdc.Worker.csproj" />
+  </Folder>
+</Solution>
