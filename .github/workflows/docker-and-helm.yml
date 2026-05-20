@@ -102,7 +102,17 @@ jobs:
 
       - name: Test Helm chart
         working-directory: charts/${{ env.CHART_NAME }}
-        run: helm template . --debug
+        run: |
+          helm template . --debug \
+            --set schedule="0 * * * *" \
+            --set openPdc.baseUrl="https://example.com" \
+            --set openPdc.itemBaseUrl="https://example.com" \
+            --set openObjects.baseUrl="https://example.com" \
+            --set openObjects.token="dummy" \
+            --set openObjects.objectTypeUrl="https://example.com" \
+            --set openObjects.owmsUrl="https://example.com" \
+            --set openObjects.owmsIdentifier="https://example.com" \
+            --set openObjects.owmsEndDate="2099-12-31T23:59:59Z"
 
       - name: Update chart values with new image tag
         if: ${{ fromJson(env.SHOULD_RELEASE) }}
