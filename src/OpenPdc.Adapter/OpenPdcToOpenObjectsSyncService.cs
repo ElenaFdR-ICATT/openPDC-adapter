@@ -118,7 +118,7 @@ public sealed class OpenPdcToOpenObjectsSyncService(
                 Data = new ObjectData
                 {
                     Url             = $"{options.PdcItemBaseUrl}/{item.Id}",
-                    Uuid            = Guid.Empty.ToString(),
+                    Uuid            = $"00000000-0000-0000-0000-{item.Id:D12}",
                     UpnUri          = "unknown",
                     PublicatieDatum = item.DateModified is { } dto ? DateOnly.FromDateTime(dto.UtcDateTime) : null,
                     ProductAanwezig = true,
