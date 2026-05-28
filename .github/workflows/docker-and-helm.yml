@@ -156,9 +156,10 @@ jobs:
 
       - name: Deploy to test-rheden
         run: |
+          SHORT_SHA="${GITHUB_SHA::7}"
           helm upgrade --install openpdc-adapter ./charts/openpdc-adapter \
             --namespace rheden \
-            --set image.tag="main" \
+            --set image.tag="sha-${SHORT_SHA}" \
             --set schedule="${{ vars.SCHEDULE }}" \
             --set openPdc.baseUrl="${{ vars.OPENPDC_BASE_URL }}" \
             --set openPdc.itemBaseUrl="${{ vars.OPENPDC_ITEM_BASE_URL }}" \
