@@ -118,7 +118,8 @@ public sealed class OpenPdcToOpenObjectsSyncService(
                 Data = new ObjectData
                 {
                     Url             = $"{options.PdcItemBaseUrl}/{item.Id}",
-                    Uuid            = Guid.Empty.ToString(),
+                    // made up per-item UUID — Elasticsearch deduplicates by UUID, so each item needs a unique one
+                    Uuid            = $"00000000-0000-0000-0000-{item.Id:D12}", 
                     UpnUri          = "unknown",
                     PublicatieDatum = item.DateModified is { } dto ? DateOnly.FromDateTime(dto.UtcDateTime) : null,
                     ProductAanwezig = true,
