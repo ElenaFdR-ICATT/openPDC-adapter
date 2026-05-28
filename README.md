@@ -23,9 +23,21 @@ The openPDC-adapter fetches products from the WordPress REST API and syncs them 
 
 #### Running Open Objects with Docker
 
-To run Open Objects via `docker-compose`, create a `docker/postgres.entrypoint-initdb.d/` directory **in the same directory as your `docker-compose.yml`** and populate it with the DB initialisation scripts from:
+To run Open Objects via `docker-compose`, 
+1- Create a `docker/postgres.entrypoint-initdb.d/` directory **in the same directory as your `docker-compose.yml`** and populate it with the DB initialisation scripts from:
 
 > https://github.com/maykinmedia/open-object/tree/master/docker/postgres.entrypoint-initdb.d
+
+2- 1- Create a `docker/setup_configuration/` directory **in the same directory as your `docker-compose.yml`** and populate it with the DB initialisation scripts from:
+
+> https://github.com/maykinmedia/open-object/tree/master/docker/postgres.entrypoint-initdb.d
+
+3- Run docker compose: `docker compose up -d --no-build`
+
+4- For loading demo data, run: `docker compose exec web src/manage.py loaddata demodata`
+
+5- For creating user in admin portal, run: `docker compose exec web src/manage.py createsuperuser` and follow the steps
+
 
 ## Configuration reference
 
@@ -34,15 +46,15 @@ All values can be set as environment variables or in `appsettings.json`. Environ
 | Key | Description | Required |
 |---|---|---|
 | `OpenPdc__BaseUrl` | Base URL of the WordPress REST API — e.g. `https://example.nl/wp-json/wp/v2/` | **Yes** |
-| `OpenPdc__Username` | WordPress username for Basic Auth | **Yes** |
-| `OpenPdc__Password` | WordPress application password for Basic Auth | **Yes** |
+| `OpenPdc__Username` | WordPress username for Basic Auth (can be found in 1password)| **Yes** |
+| `OpenPdc__Password` | WordPress application password for Basic Auth (can be found in 1password) | **Yes** |
 | `OpenPdc__ItemBaseUrl` | Base URL used to build per-item URLs in the mapped object — e.g. `https://example.nl/wp-json/wp/v2/product` | **Yes** |
-| `OpenObjects__Token` | API token for `Authorization: Token <value>` | **Yes** |
-| `OpenObjects__ObjectTypeUrl` | URL of the registered object type — e.g. `http://host/api/v2/objecttypes/<uuid>` | **Yes** |
-| `OpenObjects__ObjectTypeVersion` | Version number of the object type — e.g. `1` | **Yes** |
-| `OpenObjects__OwmsUrl` | URL of the responsible organisation | **Yes** |
-| `OpenObjects__OwmsIdentifier` | OWMS identifier URI of the organisation | **Yes** |
-| `OpenObjects__OwmsEndDate` | OWMS end date (ISO 8601) | No (defaults to `2099-12-31`) |
+| `OpenObjects__Token` | API token sent as `Authorization: Token <value>`. To obtain: in the Objects admin UI, create a **Permission** scoped to the target object type, then create a **Token Authorization** for that permission and copy the resulting token string here. | **Yes** |
+| `OpenObjects__ObjectTypeUrl` | URL of the Kennisartikel object type registered in the objecttypen API — e.g. `http://host/api/v2/objecttypes/<uuid>` | **Yes** |
+| `OpenObjects__ObjectTypeVersion` | Published version number of the Kennisartikel object type schema to validate against — e.g. `1` | **Yes** |
+| `OpenObjects__OwmsUrl` | Homepage URL of the responsible organisation — mapped to `verantwoordelijkeOrganisatie.url` in the Kennisartikel schema | **Yes** |
+| `OpenObjects__OwmsIdentifier` | OWMS identifier URI of the responsible organisation — mapped to `verantwoordelijkeOrganisatie.owmsIdentifier` | **Yes** |
+| `OpenObjects__OwmsEndDate` | OWMS end date (ISO 8601) — mapped to `verantwoordelijkeOrganisatie.owmsEndDate` | No (defaults to `2099-12-31T23:59:59Z`) |
 
 ## Constant field values
 
