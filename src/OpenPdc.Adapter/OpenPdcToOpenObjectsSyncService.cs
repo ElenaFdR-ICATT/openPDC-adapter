@@ -118,9 +118,10 @@ public sealed class OpenPdcToOpenObjectsSyncService(
                 Data = new ObjectData
                 {
                     Url             = $"{options.PdcItemBaseUrl}/{item.Id}",
-                    Uuid            = Guid.Empty.ToString(),
+                    // made up per-item UUID — Elasticsearch deduplicates by UUID, so each item needs a unique one
+                    Uuid            = $"00000000-0000-0000-0000-{item.Id:D12}",
                     UpnUri          = "unknown",
-                    PublicatieDatum = item.DateModified is { } dto ? DateOnly.FromDateTime(dto.UtcDateTime) : null,
+                    PublicatieDatum = item.Modified is { } dto ? DateOnly.FromDateTime(dto.UtcDateTime) : null,
                     ProductAanwezig = true,
                     Doelgroep       = "eu-burger",
                     VerantwoordelijkeOrganisatie = new VerantwoordelijkeOrganisatie
@@ -132,13 +133,14 @@ public sealed class OpenPdcToOpenObjectsSyncService(
                     Vertalingen = [
                         new Vertaling
                         {
-                            Taal           = item.Language == "en" ? Taal.En : Taal.Nl,
-                            Titel          = item.Title,
-                            Tekst          = item.Content,
-                            DatumWijziging = item.DateModified,
+                            Taal           = Taal.Nl,
+                            Titel          = item.Title?.Rendered,
+                            Tekst          = item.Content?.Rendered,
+                            DatumWijziging = item.Modified,
+                            DeskMemo       = item.InternalMemo ?? string.Empty,
                         }
                     ],
-                    BeschikbareTalen = [item.Language ?? "nl"],
+                    BeschikbareTalen = ["nl"],
                 },
             },
         };

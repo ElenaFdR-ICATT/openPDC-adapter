@@ -15,4 +15,7 @@ public sealed class Vertaling
 
     [JsonPropertyName("datumWijziging")]
     public DateTimeOffset? DatumWijziging { get; init; }
+
+    [JsonPropertyName("deskMemo")]
+    public string? DeskMemo { get; init; }
 }

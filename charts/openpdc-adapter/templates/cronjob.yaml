@@ -24,6 +24,16 @@ spec:
               env:
                 - name: OpenPdc__BaseUrl
                   value: {{ .Values.openPdc.baseUrl | quote }}
+                - name: OpenPdc__Username
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "openpdc-adapter.fullname" . }}
+                      key: OpenPdc__Username
+                - name: OpenPdc__Password
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "openpdc-adapter.fullname" . }}
+                      key: OpenPdc__Password
                 - name: OpenPdc__ItemBaseUrl
                   value: {{ .Values.openPdc.itemBaseUrl | quote }}
                 - name: OpenObjects__BaseUrl

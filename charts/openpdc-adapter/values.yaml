@@ -7,8 +7,10 @@ image:
 schedule: ""          # required — cron expression, e.g. "0 2 * * *"
 
 openPdc:
-  baseUrl: ""         # required — e.g. https://openpdc-instance/wp-json/owc/pdc/v1/
-  itemBaseUrl: ""     # required — e.g. https://openpdc-instance/wp-json/owc/pdc/v1/items
+  baseUrl: ""         # required — e.g. https://rheden-nl.ontw.stuurlui.dev/wp-json/wp/v2/
+  username: ""        # required — WordPress application password username
+  password: ""        # required — WordPress application password
+  itemBaseUrl: ""     # required — e.g. https://rheden-nl.ontw.stuurlui.dev/wp-json/wp/v2/product
 
 openObjects:
   baseUrl: ""           # required — e.g. http://host:8000

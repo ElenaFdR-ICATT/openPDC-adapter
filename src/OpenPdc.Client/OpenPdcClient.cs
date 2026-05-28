@@ -23,30 +23,28 @@ public sealed class OpenPdcClient : IOpenPdcClient
         _httpClient = httpClient;
     }
 
-    private async Task<PdcItemsResponse> GetItemsAsync(
-        int page = 1,
-        int? limit = null,
-        CancellationToken cancellationToken = default)
+    private async Task<(IReadOnlyList<PdcItem> Items, int TotalPages)> GetItemsAsync(
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken)
     {
-        if (page < 1)
+        var requestUri = $"product?per_page={pageSize}&_fields=id,internal_memo,title,content,modified&page={page}";
+
+        using var response = await _httpClient.GetAsync(requestUri, cancellationToken).ConfigureAwait(false);
+        response.EnsureSuccessStatusCode();
+
+        var items = await response.Content
+            .ReadFromJsonAsync<IReadOnlyList<PdcItem>>(JsonOptions, cancellationToken)
+            .ConfigureAwait(false) ?? [];
+
+        var totalPages = 1;
+        if (response.Headers.TryGetValues("X-WP-TotalPages", out var headerValues) &&
+            int.TryParse(headerValues.FirstOrDefault(), out var tp))
         {
-            throw new ArgumentOutOfRangeException(nameof(page), page, "Page must be >= 1.");
+            totalPages = tp;
         }
 
-        var query = $"?page={page}";
-        if (limit is > 0)
-        {
-            query += $"&per_page={limit.Value}";
-        }
-
-        // BaseAddress is expected to end with "/owc/pdc/v1/"; "items/" is relative to it.
-        var requestUri = new Uri("items/" + query, UriKind.Relative);
-
-        var response = await _httpClient
-            .GetFromJsonAsync<PdcItemsResponse>(requestUri, JsonOptions, cancellationToken)
-            .ConfigureAwait(false);
-
-        return response ?? new PdcItemsResponse();
+        return (items, totalPages);
     }
 
     public async IAsyncEnumerable<PdcItem> GetAllItemsAsync(
@@ -54,26 +52,18 @@ public sealed class OpenPdcClient : IOpenPdcClient
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         if (pageSize < 1)
-        {
             throw new ArgumentOutOfRangeException(nameof(pageSize), pageSize, "Page size must be >= 1.");
-        }
 
         var page = 1;
         while (true)
         {
-            var response = await GetItemsAsync(page, pageSize, cancellationToken).ConfigureAwait(false);
+            var (items, totalPages) = await GetItemsAsync(page, pageSize, cancellationToken).ConfigureAwait(false);
 
-            foreach (var item in response.Data)
-            {
+            foreach (var item in items)
                 yield return item;
-            }
 
-            if (response.Data.Count == 0 ||
-                response.Pagination.TotalPages <= 0 ||
-                page >= response.Pagination.TotalPages)
-            {
+            if (items.Count == 0 || page >= totalPages)
                 yield break;
-            }
 
             page++;
         }

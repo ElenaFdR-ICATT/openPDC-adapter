@@ -7,3 +7,4 @@ obj/
 .vscode/
 *.swp
 .DS_Store
+values.local.yaml

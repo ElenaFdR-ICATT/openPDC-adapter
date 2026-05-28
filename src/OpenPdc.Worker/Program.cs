@@ -24,7 +24,9 @@ services.AddLogging(b => b.AddConsole().AddConfiguration(config.GetSection("Logg
 
 services.AddOpenPdcClient(o =>
 {
-    o.BaseUrl = Require(config, "OpenPdc:BaseUrl");
+    o.BaseUrl  = Require(config, "OpenPdc:BaseUrl");
+    o.Username = Require(config, "OpenPdc:Username");
+    o.Password = Require(config, "OpenPdc:Password");
 });
 
 services.AddOpenObjectsClient(o =>
