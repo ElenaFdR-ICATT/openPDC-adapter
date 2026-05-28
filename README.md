@@ -30,7 +30,7 @@ To run Open Objects via `docker-compose`,
 
 2- 1- Create a `docker/setup_configuration/` directory **in the same directory as your `docker-compose.yml`** and populate it with the DB initialisation scripts from:
 
-> https://github.com/maykinmedia/open-object/tree/master/docker/postgres.entrypoint-initdb.d
+> https://github.com/maykinmedia/open-object/tree/master/docker/setup_configuration
 
 3- Run docker compose: `docker compose up -d --no-build`
 
