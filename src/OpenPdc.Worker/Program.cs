@@ -1,4 +1,3 @@
-using DotNetEnv;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -6,10 +5,9 @@ using OpenObjects.Client;
 using OpenPdc.Adapter;
 using OpenPdc.Client;
 
-Env.Load(Path.Combine(AppContext.BaseDirectory, ".env"));
-
 var config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: true)
+    .AddUserSecrets<Program>()
     .AddEnvironmentVariables()
     .Build();
 
