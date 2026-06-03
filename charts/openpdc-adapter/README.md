@@ -20,6 +20,8 @@ Syncs items from openPDC to Open Objects (SDG Kennisartikelen)
 | openObjects.token | string | `""` |  |
 | openPdc.baseUrl | string | `""` |  |
 | openPdc.itemBaseUrl | string | `""` |  |
+| openPdc.password | string | `""` |  |
+| openPdc.username | string | `""` |  |
 | resources | object | `{}` |  |
 | schedule | string | `""` |  |
 

@@ -1,4 +1,3 @@
-using DotNetEnv;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -6,10 +5,9 @@ using OpenObjects.Client;
 using OpenPdc.Adapter;
 using OpenPdc.Client;
 
-Env.Load(Path.Combine(AppContext.BaseDirectory, ".env"));
-
 var config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json", optional: true)
+    .AddUserSecrets<Program>()
     .AddEnvironmentVariables()
     .Build();
 
@@ -24,7 +22,9 @@ services.AddLogging(b => b.AddConsole().AddConfiguration(config.GetSection("Logg
 
 services.AddOpenPdcClient(o =>
 {
-    o.BaseUrl = Require(config, "OpenPdc:BaseUrl");
+    o.BaseUrl  = Require(config, "OpenPdc:BaseUrl");
+    o.Username = Require(config, "OpenPdc:Username");
+    o.Password = Require(config, "OpenPdc:Password");
 });
 
 services.AddOpenObjectsClient(o =>

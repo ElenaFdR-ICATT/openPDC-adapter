@@ -1,3 +1,5 @@
+using System.Net.Http.Headers;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace OpenPdc.Client;
@@ -14,12 +16,10 @@ public static class ServiceCollectionExtensions
         configure?.Invoke(options);
 
         if (string.IsNullOrWhiteSpace(options.BaseUrl))
-        {
             throw new InvalidOperationException("OpenPdcClientOptions.BaseUrl must be set.");
-        }
 
-        // Ensure trailing slash so that relative URIs combine correctly.
         var baseUrl = options.BaseUrl.EndsWith('/') ? options.BaseUrl : options.BaseUrl + "/";
+        var credentials = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{options.Username}:{options.Password}"));
 
         return services.AddHttpClient<IOpenPdcClient, OpenPdcClient>(client =>
         {
@@ -27,6 +27,7 @@ public static class ServiceCollectionExtensions
             client.Timeout = options.Timeout;
             client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
             client.DefaultRequestHeaders.UserAgent.ParseAdd("OpenPdc.Client/1.0");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
         });
     }
 }
