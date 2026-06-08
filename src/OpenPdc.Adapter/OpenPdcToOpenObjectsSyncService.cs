@@ -75,9 +75,8 @@ public sealed class OpenPdcToOpenObjectsSyncService(
             try
             {
                 if (existingByItemId.TryGetValue(item.Id, out var existing))
-                    await objectsClient.PutObjectAsync(existing.Uuid, request, cancellationToken);
-                else
-                    await objectsClient.PostObjectAsync(request, cancellationToken);
+                    await objectsClient.DeleteObjectAsync(existing.Uuid, cancellationToken);
+                await objectsClient.PostObjectAsync(request, cancellationToken);
                 itemCount++;
             }
             catch (HttpRequestException ex)
