@@ -13,4 +13,6 @@ public sealed class OpenPdcToOpenObjectsSyncOptions
     public string OwmsIdentifier { get; set; } = string.Empty;
 
     public DateTimeOffset OwmsEndDate { get; set; }
+
+    public string[] WordPressContentTypes { get; set; } = ["product", "pages", "publication"];
 }

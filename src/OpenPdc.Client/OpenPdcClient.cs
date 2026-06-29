@@ -24,11 +24,12 @@ public sealed class OpenPdcClient : IOpenPdcClient
     }
 
     private async Task<(IReadOnlyList<PdcItem> Items, int TotalPages)> GetItemsAsync(
+        string contentType,
         int page,
         int pageSize,
         CancellationToken cancellationToken)
     {
-        var requestUri = $"product?per_page={pageSize}&_fields=id,internal_memo,title,content,modified&page={page}";
+        var requestUri = $"{contentType}?per_page={pageSize}&_fields=id,internal_memo,title,content,modified&page={page}";
 
         using var response = await _httpClient.GetAsync(requestUri, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
@@ -48,6 +49,7 @@ public sealed class OpenPdcClient : IOpenPdcClient
     }
 
     public async IAsyncEnumerable<PdcItem> GetAllItemsAsync(
+        string contentType,
         int pageSize = 50,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
@@ -57,7 +59,7 @@ public sealed class OpenPdcClient : IOpenPdcClient
         var page = 1;
         while (true)
         {
-            var (items, totalPages) = await GetItemsAsync(page, pageSize, cancellationToken).ConfigureAwait(false);
+            var (items, totalPages) = await GetItemsAsync(contentType, page, pageSize, cancellationToken).ConfigureAwait(false);
 
             foreach (var item in items)
                 yield return item;

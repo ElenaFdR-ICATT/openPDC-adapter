@@ -20,5 +20,9 @@ openObjects:
   owmsUrl: ""           # required — e.g. https://openpdc-instance
   owmsIdentifier: ""    # required — e.g. https://openpdc-instance/org/<owms-id>
   owmsEndDate: ""       # required — e.g. 2099-12-31T23:59:59Z
+  wordPressContentTypes:  # optional — WordPress content type path segments to sync
+    - product
+    - pages
+    - publication
 
 resources: {}

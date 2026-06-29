@@ -15,9 +15,15 @@ public sealed class OpenPdcToOpenObjectsSyncService(
     public async Task RunAsync(CancellationToken cancellationToken = default)
     {
         var pdcItems = new List<PdcItem>();
-        await foreach (var item in pdcClient.GetAllItemsAsync(cancellationToken: cancellationToken))
-            pdcItems.Add(item);
-        logger.LogInformation("Collected {Count} PDC item(s).", pdcItems.Count);
+        foreach (var contentType in options.WordPressContentTypes)
+        {
+            var before = pdcItems.Count;
+            await foreach (var item in pdcClient.GetAllItemsAsync(contentType, cancellationToken: cancellationToken))
+                pdcItems.Add(item);
+            var collected = pdcItems.Count - before;
+            logger.LogInformation("Collected {Count} PDC item(s) from '{ContentType}'.", collected, contentType);
+        }
+        logger.LogInformation("Collected {Count} PDC item(s) in total.", pdcItems.Count);
 
         // Get all existing OpenObjects records once and build a lookup by PDC itemId.
         var existingByItemId = new Dictionary<long, ObjectResponse>();

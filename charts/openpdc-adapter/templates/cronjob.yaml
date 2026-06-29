@@ -55,3 +55,7 @@ spec:
                   value: {{ .Values.openObjects.owmsIdentifier | quote }}
                 - name: OpenObjects__OwmsEndDate
                   value: {{ .Values.openObjects.owmsEndDate | quote }}
+                {{- range $i, $v := .Values.openObjects.wordPressContentTypes }}
+                - name: {{ printf "OpenObjects__WordPressContentTypes__%d" $i }}
+                  value: {{ $v | quote }}
+                {{- end }}
