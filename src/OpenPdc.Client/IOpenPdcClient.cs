@@ -4,6 +4,8 @@ namespace OpenPdc.Client;
 
 public interface IOpenPdcClient
 {
+    string BaseUrl { get; }
+
     /// <summary>
     /// Streams every PDC item from the given endpoint by transparently following the API's pagination.
     /// </summary>

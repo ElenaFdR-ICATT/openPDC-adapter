@@ -23,6 +23,8 @@ public sealed class OpenPdcClient : IOpenPdcClient
         _httpClient = httpClient;
     }
 
+    public string BaseUrl => _httpClient.BaseAddress?.ToString().TrimEnd('/') ?? string.Empty;
+
     private async Task<(IReadOnlyList<PdcItem> Items, int TotalPages)> GetItemsAsync(
         string contentType,
         int page,

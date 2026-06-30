@@ -37,7 +37,6 @@ services.AddOpenPdcToOpenObjectsSyncService(o =>
 {
     o.ObjectTypeUrl     = Require(config, "OpenObjects:ObjectTypeUrl");
     o.ObjectTypeVersion = int.Parse(config["OpenObjects:ObjectTypeVersion"] ?? "1");
-    o.PdcItemBaseUrl    = Require(config, "OpenPdc:ItemBaseUrl");
     o.OwmsUrl           = Require(config, "OpenObjects:OwmsUrl");
     o.OwmsIdentifier    = Require(config, "OpenObjects:OwmsIdentifier");
     o.OwmsEndDate       = DateTimeOffset.Parse(config["OpenObjects:OwmsEndDate"] ?? "2099-12-31T23:59:59Z");

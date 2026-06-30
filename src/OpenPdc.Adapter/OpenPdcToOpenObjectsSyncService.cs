@@ -14,12 +14,12 @@ public sealed class OpenPdcToOpenObjectsSyncService(
 {
     public async Task RunAsync(CancellationToken cancellationToken = default)
     {
-        var pdcItems = new List<PdcItem>();
+        var pdcItems = new List<(PdcItem Item, string ContentType)>();
         foreach (var contentType in options.WordPressContentTypes)
         {
             var before = pdcItems.Count;
             await foreach (var item in pdcClient.GetAllItemsAsync(contentType, cancellationToken: cancellationToken))
-                pdcItems.Add(item);
+                pdcItems.Add((item, contentType));
             var collected = pdcItems.Count - before;
             logger.LogInformation("Collected {Count} PDC item(s) from '{ContentType}'.", collected, contentType);
         }
@@ -75,9 +75,9 @@ public sealed class OpenPdcToOpenObjectsSyncService(
 
         // Insert or update every PDC item.
         var itemCount = 0;
-        foreach (var item in pdcItems)
+        foreach (var (item, contentType) in pdcItems)
         {
-            var request = MapToRequest(item);
+            var request = MapToRequest(item, contentType);
             try
             {
                 if (existingByItemId.TryGetValue(item.Id, out var existing))
@@ -93,7 +93,7 @@ public sealed class OpenPdcToOpenObjectsSyncService(
         logger.LogInformation("Processed {Count} item(s).", itemCount);
 
         // Delete obecjts in OpenObjects whose PDC item no longer exists.
-        var pdcIds = pdcItems.Select(i => i.Id).ToHashSet();
+        var pdcIds = pdcItems.Select(i => i.Item.Id).ToHashSet();
         var orphans = existingByItemId.Where(kvp => !pdcIds.Contains(kvp.Key)).ToList();
         var deletedCount = 0;
         foreach (var (itemId, obj) in orphans)
@@ -112,7 +112,7 @@ public sealed class OpenPdcToOpenObjectsSyncService(
         logger.LogInformation("Done. Processed {itemCount} item(s), deleted {DeletedCount} orphan(s).", itemCount, deletedCount);
     }
 
-    private CreateObjectRequest MapToRequest(PdcItem item) =>
+    private CreateObjectRequest MapToRequest(PdcItem item, string contentType) =>
         new()
         {
             Type = $"{options.ObjectTypeUrl}",
@@ -122,7 +122,7 @@ public sealed class OpenPdcToOpenObjectsSyncService(
                 StartAt     = DateOnly.FromDateTime(DateTime.UtcNow),
                 Data = new ObjectData
                 {
-                    Url             = $"{options.PdcItemBaseUrl}/{item.Id}",
+                    Url             = $"{pdcClient.BaseUrl}/{contentType}/{item.Id}",
                     // made up per-item UUID — Elasticsearch deduplicates by UUID, so each item needs a unique one
                     Uuid            = $"00000000-0000-0000-0000-{item.Id:D12}",
                     UpnUri          = "unknown",
