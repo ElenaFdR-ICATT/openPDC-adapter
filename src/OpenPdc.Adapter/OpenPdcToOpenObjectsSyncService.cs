@@ -17,10 +17,10 @@ public sealed class OpenPdcToOpenObjectsSyncService(
         var pdcItems = new List<(PdcItem Item, string ContentType)>();
         foreach (var contentType in options.WordPressContentTypes)
         {
-            var before = pdcItems.Count;
+            var countBefore = pdcItems.Count;
             await foreach (var item in pdcClient.GetAllItemsAsync(contentType, cancellationToken: cancellationToken))
                 pdcItems.Add((item, contentType));
-            var collected = pdcItems.Count - before;
+            var collected = pdcItems.Count - countBefore;
             logger.LogInformation("Collected {Count} PDC item(s) from '{ContentType}'.", collected, contentType);
         }
         logger.LogInformation("Collected {Count} PDC item(s) in total.", pdcItems.Count);
@@ -30,23 +30,23 @@ public sealed class OpenPdcToOpenObjectsSyncService(
         var duplicates = new List<(Guid Uuid, long ItemId)>();
         try
         {
-            var grouped = new Dictionary<long, List<ObjectResponse>>();
+            var objectsByItemId = new Dictionary<long, List<ObjectResponse>>();
             await foreach (var obj in objectsClient.GetAllObjectsByObjectTypeUrlAsync(options.ObjectTypeUrl, cancellationToken))
             {
                 var dataUrl = obj.Record?.Data?.Url;
-                if (dataUrl is null) 
-                    continue;
-                
-                var lastSegment = dataUrl.TrimEnd('/').Split('/')[^1];
-                if (!long.TryParse(lastSegment, out var itemId)) 
+                if (dataUrl is null)
                     continue;
 
-                if (!grouped.TryGetValue(itemId, out var list))
-                    grouped[itemId] = list = [];
+                var rawItemId = dataUrl.TrimEnd('/').Split('/')[^1];
+                if (!long.TryParse(rawItemId, out var itemId))
+                    continue;
+
+                if (!objectsByItemId.TryGetValue(itemId, out var list))
+                    objectsByItemId[itemId] = list = [];
                 list.Add(obj);
             }
 
-            foreach (var (itemId, objects) in grouped)
+            foreach (var (itemId, objects) in objectsByItemId)
             {
                 existingByItemId[itemId] = objects[0];
                 for (var i = 1; i < objects.Count; i++)
@@ -92,7 +92,7 @@ public sealed class OpenPdcToOpenObjectsSyncService(
         }
         logger.LogInformation("Processed {Count} item(s).", itemCount);
 
-        // Delete obecjts in OpenObjects whose PDC item no longer exists.
+        // Delete objects in OpenObjects whose PDC item no longer exists.
         var pdcIds = pdcItems.Select(i => i.Item.Id).ToHashSet();
         var orphans = existingByItemId.Where(kvp => !pdcIds.Contains(kvp.Key)).ToList();
         var deletedCount = 0;
@@ -139,8 +139,8 @@ public sealed class OpenPdcToOpenObjectsSyncService(
                         new Vertaling
                         {
                             Taal           = Taal.Nl,
-                            Titel          = item.Title?.Rendered,
-                            Tekst          = item.Content?.Rendered,
+                            Titel          = BuildTitel(item.Title?.Rendered, contentType),
+                            Tekst          = BuildTekst(item.Content?.Rendered, item.Link),
                             DatumWijziging = item.Modified,
                             DeskMemo       = item.InternalMemo ?? string.Empty,
                         }
@@ -149,4 +149,16 @@ public sealed class OpenPdcToOpenObjectsSyncService(
                 },
             },
         };
+
+    private static string? BuildTitel(string? titel, string contentType) => contentType switch
+    {
+        "publication" => $"Publicatie: {titel}",
+        "pages"       => $"Website: {titel}",
+        _             => titel,
+    };
+
+    private static string? BuildTekst(string? tekst, string? link) =>
+        string.IsNullOrEmpty(link)
+            ? tekst
+            : $"{tekst}<hr><a href='{link}' target='_blank'>Bron</a>";
 }

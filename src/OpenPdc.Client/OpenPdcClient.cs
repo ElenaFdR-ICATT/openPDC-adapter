@@ -31,7 +31,7 @@ public sealed class OpenPdcClient : IOpenPdcClient
         int pageSize,
         CancellationToken cancellationToken)
     {
-        var requestUri = $"{contentType}?per_page={pageSize}&_fields=id,internal_memo,title,content,modified&page={page}";
+        var requestUri = $"{contentType}?per_page={pageSize}&_fields=id,internal_memo,title,content,modified,link&page={page}";
 
         using var response = await _httpClient.GetAsync(requestUri, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
