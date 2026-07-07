@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace OpenObjects.Client.Models;
 
-public sealed class CreateObjectRequest
+public sealed class CreateObjectRequestBody
 {
     [JsonPropertyName("type")]
     public required string Type { get; init; }

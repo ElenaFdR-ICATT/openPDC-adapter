@@ -36,8 +36,6 @@ spec:
                     secretKeyRef:
                       name: {{ include "openpdc-adapter.fullname" . }}
                       key: OpenPdc__Password
-                - name: OpenPdc__ItemBaseUrl
-                  value: {{ .Values.openPdc.itemBaseUrl | quote }}
                 - name: OpenObjects__BaseUrl
                   value: {{ .Values.openObjects.baseUrl | quote }}
                 - name: OpenObjects__Token
@@ -55,7 +53,3 @@ spec:
                   value: {{ .Values.openObjects.owmsIdentifier | quote }}
                 - name: OpenObjects__OwmsEndDate
                   value: {{ .Values.openObjects.owmsEndDate | quote }}
-                {{- range $i, $v := .Values.openObjects.wordPressContentTypes }}
-                - name: {{ printf "OpenObjects__WordPressContentTypes__%d" $i }}
-                  value: {{ $v | quote }}
-                {{- end }}

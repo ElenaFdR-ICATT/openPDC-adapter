@@ -26,7 +26,7 @@ public sealed class OpenObjectsClient : IOpenObjectsClient
     }
 
     public async Task<ObjectResponse> PostObjectAsync(
-        CreateObjectRequest request,
+        CreateObjectRequestBody request,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
@@ -95,7 +95,7 @@ public sealed class OpenObjectsClient : IOpenObjectsClient
         }
     }
 
-    public async Task PutObjectAsync(Guid uuid, CreateObjectRequest request, CancellationToken cancellationToken = default)
+    public async Task PutObjectAsync(Guid uuid, CreateObjectRequestBody request, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
