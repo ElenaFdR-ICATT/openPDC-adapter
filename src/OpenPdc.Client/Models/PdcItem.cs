@@ -18,4 +18,7 @@ public sealed class PdcItem
 
     [JsonPropertyName("modified")]
     public DateTimeOffset? Modified { get; init; }
+
+    [JsonPropertyName("link")]
+    public string? Link { get; init; }
 }

@@ -10,15 +10,11 @@ openPdc:
   baseUrl: ""         # required — e.g. https://rheden-nl.ontw.stuurlui.dev/wp-json/wp/v2/
   username: ""        # required — WordPress application password username
   password: ""        # required — WordPress application password
-  itemBaseUrl: ""     # required — e.g. https://rheden-nl.ontw.stuurlui.dev/wp-json/wp/v2/product
 
 openObjects:
   baseUrl: ""           # required — e.g. http://host:8000
   token: ""             # required — set via --set or a sealed secret
   objectTypeUrl: ""     # required — base URL, e.g. http://host/api/v2/objecttypes/<uuid>
   objectTypeVersion: 1  # required — e.g. 1
-  owmsUrl: ""           # required — e.g. https://openpdc-instance
-  owmsIdentifier: ""    # required — e.g. https://openpdc-instance/org/<owms-id>
-  owmsEndDate: ""       # required — e.g. 2099-12-31T23:59:59Z
 
 resources: {}

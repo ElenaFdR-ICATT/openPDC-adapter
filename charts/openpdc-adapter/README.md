@@ -14,12 +14,8 @@ Syncs items from openPDC to Open Objects (SDG Kennisartikelen)
 | openObjects.baseUrl | string | `""` |  |
 | openObjects.objectTypeUrl | string | `""` |  |
 | openObjects.objectTypeVersion | int | `1` |  |
-| openObjects.owmsEndDate | string | `""` |  |
-| openObjects.owmsIdentifier | string | `""` |  |
-| openObjects.owmsUrl | string | `""` |  |
 | openObjects.token | string | `""` |  |
 | openPdc.baseUrl | string | `""` |  |
-| openPdc.itemBaseUrl | string | `""` |  |
 | openPdc.password | string | `""` |  |
 | openPdc.username | string | `""` |  |
 | resources | object | `{}` |  |
