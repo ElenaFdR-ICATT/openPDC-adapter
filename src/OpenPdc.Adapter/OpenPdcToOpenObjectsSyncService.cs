@@ -150,9 +150,9 @@ public sealed class OpenPdcToOpenObjectsSyncService(
                     Doelgroep       = "eu-burger",
                     VerantwoordelijkeOrganisatie = new VerantwoordelijkeOrganisatie
                     {
-                        Url            = options.OwmsUrl,
-                        OwmsIdentifier = options.OwmsIdentifier,
-                        OwmsEndDate    = options.OwmsEndDate,
+                        Url = pdcClient.BaseUrl,
+                        OwmsIdentifier = pdcClient.BaseUrl,
+                        OwmsEndDate = new DateTime(3000, 1, 1),
                     },
                     Vertalingen = [
                         new Vertaling

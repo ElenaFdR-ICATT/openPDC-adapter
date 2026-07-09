@@ -52,9 +52,6 @@ All values can be set as environment variables or in `appsettings.json`. Environ
 | `OpenObjects__Token` | API token sent as `Authorization: Token <value>`. To obtain: in the Objects admin UI, create a **Permission** scoped to the target object type, then create a **Token Authorization** for that permission and copy the resulting token string here. | **Yes** |
 | `OpenObjects__ObjectTypeUrl` | URL of the Kennisartikel object type registered in the objecttypen API — e.g. `http://host/api/v2/objecttypes/<uuid>` | **Yes** |
 | `OpenObjects__ObjectTypeVersion` | Published version number of the Kennisartikel object type schema to validate against — e.g. `1` | **Yes** |
-| `OpenObjects__OwmsUrl` | Homepage URL of the responsible organisation — mapped to `verantwoordelijkeOrganisatie.url` in the Kennisartikel schema | **Yes** |
-| `OpenObjects__OwmsIdentifier` | OWMS identifier URI of the responsible organisation — mapped to `verantwoordelijkeOrganisatie.owmsIdentifier` | **Yes** |
-| `OpenObjects__OwmsEndDate` | OWMS end date (ISO 8601) — mapped to `verantwoordelijkeOrganisatie.owmsEndDate` | No (defaults to `2099-12-31T23:59:59Z`) |
 | `OpenObjects__WordPressContentTypes__0`, `__1`, … | WordPress content type path segments to sync — e.g. `product`, `pages`, `publication`. Use indexed env vars or set the array in `appsettings.json`. | No (defaults to `["product", "pages", "publication"]`) |
 
 ## Constant field values

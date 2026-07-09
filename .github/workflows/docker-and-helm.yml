@@ -112,9 +112,6 @@ jobs:
             --set openObjects.baseUrl="https://example.com" \
             --set openObjects.token="dummy" \
             --set openObjects.objectTypeUrl="https://example.com" \
-            --set openObjects.owmsUrl="https://example.com" \
-            --set openObjects.owmsIdentifier="https://example.com" \
-            --set openObjects.owmsEndDate="2099-12-31T23:59:59Z"
 
       - name: Update chart values with new image tag
         if: ${{ fromJson(env.SHOULD_RELEASE) }}
