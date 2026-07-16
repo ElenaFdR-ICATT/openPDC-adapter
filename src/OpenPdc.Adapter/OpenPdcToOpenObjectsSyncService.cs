@@ -159,7 +159,7 @@ public sealed class OpenPdcToOpenObjectsSyncService(
                         {
                             Taal           = Taal.Nl,
                             Titel          = BuildTitel(item.Title?.Rendered, contentType),
-                            Tekst          = BuildTekst(item.Content?.Rendered, item.Link),
+                            Tekst          = BuildTekst(item.Content?.Rendered, item.Excerpt?.Rendered, item.Link),
                             DatumWijziging = item.Modified,
                             DeskMemo       = item.InternalMemo ?? string.Empty,
                         }
@@ -176,10 +176,13 @@ public sealed class OpenPdcToOpenObjectsSyncService(
         _             => titel,
     };
 
-    private static string? BuildTekst(string? tekst, string? link) =>
-        string.IsNullOrEmpty(link)
+    private static string? BuildTekst(string? content, string? excerpt, string? link)
+    {
+        var tekst = string.IsNullOrEmpty(content) ? excerpt : content;
+        return string.IsNullOrEmpty(link)
             ? tekst
             : $"{tekst}<hr><a href='{link}' target='_blank'>Bron</a>";
+    }
 
     private readonly record struct PdcRequest(long ItemId, CreateObjectRequestBody Request);
 }
