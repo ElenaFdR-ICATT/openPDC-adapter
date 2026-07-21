@@ -14,7 +14,7 @@ public interface IOpenObjectsClient
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The created object as returned by the API.</returns>
     Task<ObjectResponse> PostObjectAsync(
-        CreateObjectRequest request,
+        CreateObjectRequestBody request,
         CancellationToken cancellationToken = default);
 
     /// <summary>
@@ -27,7 +27,7 @@ public interface IOpenObjectsClient
     /// <summary>
     /// Replaces the object with the given UUID.
     /// </summary>
-    Task PutObjectAsync(Guid uuid, CreateObjectRequest request, CancellationToken cancellationToken = default);
+    Task PutObjectAsync(Guid uuid, CreateObjectRequestBody request, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Deletes the object with the given UUID.

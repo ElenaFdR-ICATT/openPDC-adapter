@@ -13,9 +13,15 @@ public sealed class PdcItem
     [JsonPropertyName("content")]
     public PdcRendered? Content { get; init; }
 
+    [JsonPropertyName("excerpt")]
+    public PdcRendered? Excerpt { get; init; }
+
     [JsonPropertyName("internal_memo")]
     public string? InternalMemo { get; init; }
 
     [JsonPropertyName("modified")]
     public DateTimeOffset? Modified { get; init; }
+
+    [JsonPropertyName("link")]
+    public string? Link { get; init; }
 }

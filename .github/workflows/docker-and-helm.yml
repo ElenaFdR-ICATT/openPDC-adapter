@@ -109,13 +109,9 @@ jobs:
             --set openPdc.baseUrl="https://example.com" \
             --set openPdc.username="dummy" \
             --set openPdc.password="dummy" \
-            --set openPdc.itemBaseUrl="https://example.com" \
             --set openObjects.baseUrl="https://example.com" \
             --set openObjects.token="dummy" \
             --set openObjects.objectTypeUrl="https://example.com" \
-            --set openObjects.owmsUrl="https://example.com" \
-            --set openObjects.owmsIdentifier="https://example.com" \
-            --set openObjects.owmsEndDate="2099-12-31T23:59:59Z"
 
       - name: Update chart values with new image tag
         if: ${{ fromJson(env.SHOULD_RELEASE) }}
@@ -133,5 +129,5 @@ jobs:
           CHART_URL_LOWERCASE=$(echo "${{ env.CHART_URL }}" | tr '[:upper:]' '[:lower:]')
           helm package ./${{ env.CHART_NAME }}
           echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ${{ env.CHART_URL }} --username ${{ github.actor }} --password-stdin
-          helm push ${{ env.CHART_NAME }}-${{ env.VERSION }}.tgz oci://$CHART_URL_LOWERCASE
+          helm push ${{ env.CHART_NAME }}-${{ env.VERSION }}.tgz oci://$CHART_URL_LOWERCASE/charts
 
